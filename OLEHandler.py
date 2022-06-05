@@ -1,6 +1,7 @@
 import argparse
 from OLELib.FileExtractor import convert_file
 from pathlib import Path
+from OLEUI import run_ui
 
 # ======================================================================================================================
 # CMD Argument Parser
@@ -21,8 +22,15 @@ parser.add_argument(
 )
 parser.add_argument(
     "-d", "--debug",
-    help="Start the script in DEBUG mode",
+    help="Start the script in DEBUG mode.",
     dest="debug",
+    type=bool,
+    default=False
+)
+parser.add_argument(
+    "-ui",
+    help="Run in GUI Mode.",
+    dest="ui",
     type=bool,
     default=False
 )
@@ -34,12 +42,17 @@ cmd_args = parser.parse_args()
 DEBUG = cmd_args.debug
 FILE_PATH = cmd_args.extract
 SAVED_PATH = cmd_args.saved_path
+UI = cmd_args.ui
 
 if DEBUG is True:
-    print(f"[CMD ARGS]: DEBUG: {DEBUG} | {FILE_PATH} | {SAVED_PATH}")
+    print(f"[CMD ARGS]: DEBUG: {DEBUG} | {FILE_PATH} | {SAVED_PATH} | {UI}")
 
 # ======================================================================================================================
 # Run Extraction
-convert_file(FILE_PATH, SAVED_PATH, DEBUG)
+if UI is False:
+    convert_file(FILE_PATH, SAVED_PATH, DEBUG)
+
+else:
+    run_ui()
 
 input("Press [ENTER] to continue...")

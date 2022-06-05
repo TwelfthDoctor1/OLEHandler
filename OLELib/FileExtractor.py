@@ -75,7 +75,8 @@ def extract_attachments(saved_path: Path or str, debug):
             break
 
     if file_dir is None:
-        print("[ERROR 2] The Extracted file is NOT a PPTX, DOCX or XLSX.")
+        print("[ERROR 2] The Extracted file is NOT a 2007 onwards Excel/Word/Powerpoint File. (DOC, PPT and XLS are not"
+              " accepted as they are from 97-2003).")
         return
 
     for (x, y, z) in os.walk(file_dir):
