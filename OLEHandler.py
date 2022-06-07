@@ -1,7 +1,6 @@
 import argparse
-from OLELib.FileExtractor import convert_file
 from pathlib import Path
-from OLEUI import run_ui
+from OLELib.OLEUI import run_gtui
 
 # ======================================================================================================================
 # CMD Argument Parser
@@ -29,10 +28,10 @@ parser.add_argument(
 )
 parser.add_argument(
     "-ui",
-    help="Run in GUI Mode.",
+    help="Run in GUI Mode. To run in CLI mode, UI flag should be set to False.",
     dest="ui",
     type=bool,
-    default=False
+    default=True  # By default, running the EXEC starts GUI
 )
 
 # Parse Args
@@ -49,10 +48,5 @@ if DEBUG is True:
 
 # ======================================================================================================================
 # Run Extraction
-if UI is False:
-    convert_file(FILE_PATH, SAVED_PATH, DEBUG)
+run_gtui(FILE_PATH, SAVED_PATH, UI, DEBUG)
 
-else:
-    run_ui()
-
-input("Press [ENTER] to continue...")

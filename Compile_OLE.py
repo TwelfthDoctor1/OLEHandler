@@ -10,6 +10,7 @@ CORE_COMPILE = os.path.join(BASE_PATH, "OLEHandler.py")
 # print(CORE_COMPILE)
 
 # VM Handling
+# Should not be needed due to usage of os.system()
 if str(Path(__file__).resolve()).startswith(r"\\vmware-host"):
     print("[COMPILE NOTICE] Compilation process running in VM...")
     BASE_PATH = os.path.join("Z:", "Transfer", "GitHub", "OLEHandler")
@@ -34,30 +35,22 @@ else:
 
 # Run Command to Compile OLEHandler into Executable File
 print("Compiling OLEHandler into executable form...")
-print(COMPILE_PATH)
 
 time.sleep(1)
 
 # Run Command to Compile
 if platform == "darwin":
+    # For compile into an .app
+    # Include --windowed flag
     subprocess.run(
         [
-            f"PyInstaller -F {CORE_COMPILE} -n OLEHandler --distpath {DIST_PATH} --workpath {BUILD_PATH}"
+            f"PyInstaller -F {CORE_COMPILE} -n OLEHandler --distpath {DIST_PATH} --workpath {BUILD_PATH} --windowed"
         ],
         shell=True
     )
-else:
-    subprocess.run(
-        [
-            f"python3 -m PyInstaller -h"
-        ],
-        shell=True
-    )
-    subprocess.run(
-        [
-            f"python3 -m PyInstaller -F {CORE_COMPILE} -n OLEHandler --distpath {DIST_PATH} --workpath {BUILD_PATH}"
-        ],
-        shell=True
-    )
+    input("Completed Compilation of OLEHandler File. Press [ENTER] to finish this process...")
 
-input("Completed Compilation of OLEHandler File. Press [ENTER] to finish this process...")
+else:
+    print("Parsing to cmd.exe for compilation, this process will end...")
+    os.system(r"start .\Win32_CompileOLE.cmd")
+

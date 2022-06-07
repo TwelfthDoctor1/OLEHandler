@@ -2,7 +2,8 @@ from pathlib import Path
 import os
 import shutil
 from zipfile import ZipFile
-from sys import platform
+from OLELib.OLEErrorUI import OLEErrorWindow
+from OLELib.OLEInfoUI import OLEInfoWindow
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMP_DIR = os.path.join(BASE_DIR, "TempFile")
@@ -13,9 +14,10 @@ PDF_BYTE_END = b"%%EOF"
 FOLDER_NAME = ["ppt", "doc", "word", "xls"]
 
 
-def convert_file(filepath: Path or str, saved_path: Path or str = "", debug=False):
+def convert_file(filepath: Path or str, saved_path: Path or str = "", debug=False, ui=False):
     """
     Convert the DOCX, PPTX, XLSX files into Zips and extracts them.
+    :param ui: bool True/False
     :param filepath: Path or str
     :param debug: bool - True/False
     :param saved_path: Path or str
@@ -24,6 +26,11 @@ def convert_file(filepath: Path or str, saved_path: Path or str = "", debug=Fals
     # Init Check Filepath
     if os.path.exists(filepath) is False:
         print(f"[ERROR 0]: The specified file does not exist.")
+
+        if ui is True:
+            error_window = OLEErrorWindow(f"[ERROR 0]: The specified file does not exist.")
+            error_window.show()
+
         return
 
     # Get Path of File in TempDir
@@ -38,6 +45,12 @@ def convert_file(filepath: Path or str, saved_path: Path or str = "", debug=Fals
 
     except shutil.Error as e:
         print(f"[ERROR 1]: File Extraction error. It is likely that the file is not a ZIP file.\n\n{e}")
+
+        if ui is True:
+            error_window = OLEErrorWindow(f"[ERROR 1]: File Extraction error. It is likely that the file "
+                                          f"\nis not a ZIP file.\n\n{e}")
+            error_window.show()
+
         return
 
     # Formulate ZipFile name
@@ -56,10 +69,10 @@ def convert_file(filepath: Path or str, saved_path: Path or str = "", debug=Fals
     with ZipFile(zip_path, "r") as zip_ext:
         zip_ext.extractall(TEMP_DIR)
 
-    extract_attachments(saved_path, debug)
+    extract_attachments(saved_path, debug, ui)
 
 
-def extract_attachments(saved_path: Path or str, debug):
+def extract_attachments(saved_path: Path or str, debug, ui=False):
     ATTACHMENT_COUNT = 0
     PASSED_COUNT = 0
     FAILED_COUNT = 0
@@ -77,6 +90,14 @@ def extract_attachments(saved_path: Path or str, debug):
     if file_dir is None:
         print("[ERROR 2] The Extracted file is NOT a 2007 onwards Excel/Word/Powerpoint File. (DOC, PPT and XLS are not"
               " accepted as they are from 97-2003).")
+
+        if ui is True:
+            error_window = OLEErrorWindow(
+                "[ERROR 2] The Extracted file is NOT a 2007 onwards Excel/Word/Powerpoint File."
+                "\n(DOC, PPT and XLS are not accepted as they are from 97-2003)."
+            )
+            error_window.show()
+
         return
 
     for (x, y, z) in os.walk(file_dir):
@@ -114,7 +135,6 @@ def extract_attachments(saved_path: Path or str, debug):
                 # print(bin_spt_1)
 
                 if bin_spt_1 == -1:
-                    print("[ERROR 3] File is not a PDF File.")
                     os.remove(temp_sn)
                     FAILED_COUNT += 1
                     continue
@@ -162,3 +182,10 @@ def extract_attachments(saved_path: Path or str, debug):
                 PASSED_COUNT += 1
 
     print(f"[FINAL RESULT]: TOTAL -> {ATTACHMENT_COUNT} | PASSED -> {PASSED_COUNT} | FAILED -> {FAILED_COUNT}")
+
+    if ui is True:
+        ole_info = OLEInfoWindow(
+            title="Extraction Status",
+            text=f"Total Count: {ATTACHMENT_COUNT}\nPassed: {PASSED_COUNT}\nFailed: {FAILED_COUNT}"
+        )
+        ole_info.show()
