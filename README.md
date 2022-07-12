@@ -16,7 +16,7 @@ To use this program, you can use the Terminal (or CMD or Powershell, etc) to run
 
 To decompile and extract a file, select the file to extract and the location to save the extracted attachemnts.
 
-To start extraction, click `OK`.
+To start extraction, click `OK` on the dialog.
 
 # CLI Method
 
