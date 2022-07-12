@@ -14,6 +14,10 @@ To use this program, you can use the Terminal (or CMD or Powershell, etc) to run
 
 ![OLEHandler UI Picture](https://github.com/TwelfthDoctor1/OLEHandler/blob/master/GitResources/OLEHandler%20UI%20Picture.png)
 
+To decompile and extract a file, select the file to extract and the location to save the extracted attachemnts.
+
+To start extraction, click `OK`.
+
 # CLI Method
 
 To use CLI, specify the flags to run OLEHandler.
