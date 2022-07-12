@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
+from PyQt5 import QtGui
 from OLELib.OLEUI_ErrorDialog import Ui_OLE_UIError
 from pathlib import Path
 import os
@@ -22,7 +23,7 @@ class OLEErrorWindow(QMainWindow):
 
         # Update OLE Text
         dialog.ui.UI_Error.setText(error_message)
-        dialog.ui.UI_ErrorIcon.setPixmap(os.path.join(BASE_PATH, "Resources", "Facepalm Emote Enlargio+ 512px.png"))
+        dialog.ui.UI_ErrorIcon.setPixmap(QtGui.QPixmap(os.path.join(BASE_PATH, "Resources", "ErrorIcon.png")))
         dialog.exec()
 
 

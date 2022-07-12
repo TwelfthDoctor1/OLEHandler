@@ -1,6 +1,6 @@
 # OLEHandler
 
-Extract Core Office Files (i.e. PPTX, DOCX, XLSX) and/or Convert oleObject.bin files.
+Extract Core Office Files (i.e. PPTX, DOCX, XLSX) and/or Convert oleObject.bin files into PDFs.
 
 ### Status
 
@@ -10,7 +10,13 @@ Currently **WIP**.
 
 To use this program, you can use the Terminal (or CMD or Powershell, etc) to run.
 
-Specify the flags to run OLEHandler.
+# UI Method
+
+![OLEHandler UI Picture](https://github.com/TwelfthDoctor1/OLEHandler/blob/main/GitResources/OLEHandler%20UI%20Picture.png)
+
+# CLI Method
+
+To use CLI, specify the flags to run OLEHandler.
 
 ```
 OLEHandler -ui "False" -x EXTRACT -s SAVED_DIR
@@ -23,6 +29,6 @@ Note:
 For Paths on UNIX, to specify a space, do "\ ". E.g. /Volumes/Transfer/Some\ File/
 ```
 
-**UI based method is still being implemented. Currently, the file will error out on launch. CLI Method only applicable.**
-
 By default, just executing the file should open up the GUI.
+
+To use CLI, follow the command above to use it.

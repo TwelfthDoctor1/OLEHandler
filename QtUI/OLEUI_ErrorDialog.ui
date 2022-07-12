@@ -58,7 +58,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="UI_Core.qrc">:/UI_Error/Resources/Facepalm Emote Enlargio+ 512px.png</pixmap>
+    <pixmap>../Resources/Facepalm Emote Enlargio+ 512px.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>

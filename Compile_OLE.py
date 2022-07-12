@@ -27,8 +27,10 @@ elif platform == "darwin":
     COMPILE_PATH = os.path.join(BASE_PATH, "CompileBuild", "MACOS")
     DIST_PATH = os.path.join(COMPILE_PATH, "dist")
     BUILD_PATH = os.path.join(COMPILE_PATH, "build")
+    RESOURCE_PATH = os.path.join(BASE_PATH, "Resources")
 
 else:
+    # Currently does not support Linux, though the macOS UNIX exec file may suffice
     print("[COMPILE_ERROR] Linux currently not supported. Exiting...")
 
     sys.exit()
@@ -40,17 +42,19 @@ time.sleep(1)
 
 # Run Command to Compile
 if platform == "darwin":
-    # For compile into an .app
+    # For compiling into an .app
     # Include --windowed flag
     subprocess.run(
         [
-            f"PyInstaller -F {CORE_COMPILE} -n OLEHandler --distpath {DIST_PATH} --workpath {BUILD_PATH} --windowed"
+            f"PyInstaller -F {CORE_COMPILE} -n OLEHandler --distpath {DIST_PATH} --workpath {BUILD_PATH} --windowed -y --add-data {RESOURCE_PATH}:Resources"
         ],
         shell=True
     )
     input("Completed Compilation of OLEHandler File. Press [ENTER] to finish this process...")
 
 else:
+    # For compiling in Windows
+    # Due to some quirks, compilation has to occur through external shell
     print("Parsing to cmd.exe for compilation, this process will end...")
     os.system(r"start .\Win32_CompileOLE.cmd")
 

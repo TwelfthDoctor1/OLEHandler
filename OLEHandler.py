@@ -1,21 +1,26 @@
 import argparse
 from pathlib import Path
 from OLELib.OLEUI import run_gtui
+from OLEVersioning import __version__, __license__, __copyright__
 
 # ======================================================================================================================
 # CMD Argument Parser
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(
+    description="The OLEHandler is an application that can extract files convert oleObject.bin files into PDFs from an "
+                "Office file.",
+    epilog="This project is currently in progress. Bugs should be reported to the GitHub Issues page."
+)
 
 # Argument Addon
 parser.add_argument(
     "-x", "--extract", "-X",
-    help="Extract the PPTX, DOCX or XLSX file that contains an oleObject.bin file.",
+    help="Extract the Office file that contains attachments.",
     dest="extract",
     type=Path or str
 )
 parser.add_argument(
     "-s", "--save", "-S",
-    help="The location to save the extensions.",
+    help="The location to save the attachments.",
     dest="saved_path",
     type=Path or str
 )
@@ -27,11 +32,17 @@ parser.add_argument(
     default=False
 )
 parser.add_argument(
-    "-ui",
+    "-ui", "--ui",
     help="Run in GUI Mode. To run in CLI mode, UI flag should be set to False.",
     dest="ui",
     type=bool,
     default=True  # By default, running the EXEC starts GUI
+)
+parser.add_argument(
+    "--version", "-ver", "-v",
+    help="Show the current version of OLEHandler.",
+    action="version",
+    version=f"OLEHandler: {__version__}\nLicensed under the {__license__}.\n\n{__copyright__}"
 )
 
 # Parse Args

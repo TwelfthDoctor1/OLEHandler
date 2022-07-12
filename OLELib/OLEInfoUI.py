@@ -1,5 +1,10 @@
+import os
+from pathlib import Path
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
 from OLELib.OLEUI_InfoDialog import Ui_OLE_UIInfo
+
+BASE_PATH = Path(__file__).resolve().parent.parent
 
 
 class OLEInfoWindow(QMainWindow):
@@ -19,6 +24,7 @@ class OLEInfoWindow(QMainWindow):
         # Update OLE Text
         dialog.ui.UI_StatusTitle.setText(title)
         dialog.ui.UI_Status.setText(text)
+        dialog.ui.UI_StatusIcon.setPixmap(QtGui.QPixmap(os.path.join(BASE_PATH, "Resources", "StatusIcon.png")))
         dialog.exec()
 
 
