@@ -12,7 +12,7 @@ To use this program, you can use the Terminal (or CMD or Powershell, etc) to run
 
 # UI Method
 
-![OLEHandler UI Picture](https://github.com/TwelfthDoctor1/OLEHandler/blob/main/GitResources/OLEHandler%20UI%20Picture.png)
+![OLEHandler UI Picture](https://github.com/TwelfthDoctor1/OLEHandler/blob/master/GitResources/OLEHandler%20UI%20Picture.png)
 
 # CLI Method
 
