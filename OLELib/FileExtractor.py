@@ -4,13 +4,12 @@ import shutil
 from zipfile import ZipFile
 from OLELib.OLEErrorUI import OLEErrorWindow
 from OLELib.OLEInfoUI import OLEInfoWindow
+from OLELib.FileByteInfo import BYTE_START_LIST, BYTE_END_LIST, CONVERSION_LIST
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMP_DIR = os.path.join(BASE_DIR, "TempFile")
 
-PDF_BYTE_START = b"%PDF-"
-PDF_BYTE_END = b"%%EOF"
-
+# FileType Acceptance
 FOLDER_NAME = ["ppt", "doc", "word", "xls"]
 
 
@@ -76,6 +75,7 @@ def extract_attachments(saved_path: Path or str, debug, ui=False):
     ATTACHMENT_COUNT = 0
     PASSED_COUNT = 0
     FAILED_COUNT = 0
+    EXTRACTED = False
 
     file_dir = None
     # Handle Undefined Saved Dir
@@ -112,12 +112,14 @@ def extract_attachments(saved_path: Path or str, debug, ui=False):
                 print(z[i])
 
             if z[i].endswith("bin") and z[i].startswith("oleObject"):
+                EXTRACTED = False
+
                 if debug is True:
                     print(f"File [{z[i]}] is an oleObject.")
 
                 # Name States
                 init_sn = f"Attachment {i + 1}." + z[i].split(".")[1]
-                p_init_sn = f"Attachment {i + 1}.pdf"
+                p_init_sn = f"Attachment {i + 1}_Convert.oleconvert"
                 print(f"{TEMP_DIR} | {init_sn} | {p_init_sn}")
                 temp_sn = os.path.join(TEMP_DIR, init_sn)
                 final_sn = os.path.join(saved_path, p_init_sn)
@@ -131,33 +133,60 @@ def extract_attachments(saved_path: Path or str, debug, ui=False):
                 # ByteArray Conversion
                 f_binarr_data = bytearray(f_bin_data)
 
-                bin_spt_1 = f_binarr_data.find(PDF_BYTE_START)
-                # print(bin_spt_1)
+                for byte_list_count in range(len(BYTE_START_LIST)):
+                    byte_start = BYTE_START_LIST[byte_list_count]
+                    byte_end = BYTE_END_LIST[byte_list_count]
 
-                if bin_spt_1 == -1:
+                    bin_spt_1 = f_binarr_data.find(byte_start)
+                    # print(bin_spt_1)
+
+                    if bin_spt_1 != -1:
+                        del f_binarr_data[:bin_spt_1]
+
+                        bin_spt_2 = f_binarr_data.find(byte_end)
+
+                        if bin_spt_2 == -1:
+                            bin_spt_2 = len(f_binarr_data) - 1
+
+                        fin_bin_spt_2 = len(f_binarr_data) - (bin_spt_2 + 5)
+
+                        # print(fin_bin_spt_2)
+
+                        del f_binarr_data[-fin_bin_spt_2]
+
+                        if debug is True:
+                            print(f"BYTE LOCATION: {bin_spt_1} | {fin_bin_spt_2}")
+
+                        with open(final_sn, "wb") as file:
+                            file.write(f_binarr_data)
+
+                        os.remove(temp_sn)
+                        PASSED_COUNT += 1
+
+                        fin_fn = f"Attachment {i + 1}.{CONVERSION_LIST[byte_list_count]}"
+                        fin_fp = os.path.join(saved_path, fin_fn)
+
+                        # Rename the file to the current filetype
+                        try:
+                            os.rename(final_sn, fin_fp)
+
+                        except Exception as e:
+                            print(e)
+
+                        if debug is True:
+                            print(f"Converted Attachment {i + 1} into {fin_fp}.")
+
+                        EXTRACTED = True
+
+                        break
+
+                if EXTRACTED is False:
+                    if debug is True:
+                        print(f"Failed to convert Attachment {i + 1}. Skipping...")
+
                     os.remove(temp_sn)
                     FAILED_COUNT += 1
                     continue
-
-                else:
-                    del f_binarr_data[:bin_spt_1]
-
-                    bin_spt_2 = f_binarr_data.find(PDF_BYTE_END)
-
-                    fin_bin_spt_2 = len(f_binarr_data) - (bin_spt_2 + 5)
-
-                    # print(fin_bin_spt_2)
-
-                    del f_binarr_data[-fin_bin_spt_2]
-
-                    if debug is True:
-                        print(f"BYTE LOCATION: {bin_spt_1} | {fin_bin_spt_2}")
-
-                    with open(final_sn, "wb") as file:
-                        file.write(f_binarr_data)
-
-                    os.remove(temp_sn)
-                    PASSED_COUNT += 1
 
             # Non oleObject Saving Method
             else:

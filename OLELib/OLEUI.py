@@ -9,6 +9,7 @@ from OLEVersioning import __version__
 from OLELib.OLEErrorUI import OLEErrorWindow
 
 BASE_PATH = Path(__file__).resolve().parent
+DEBUG = False
 
 
 class OLEWindow(QMainWindow):
@@ -88,16 +89,19 @@ class OLEDialog(QDialog):
             # Close Window
             self.close()
 
-            convert_file(extract_dir, save_dir, ui=True)
+            convert_file(extract_dir, save_dir, ui=True, debug=DEBUG)
 
 
 def run_gtui(extract_dir, save_dir, ui=True, debug=False):
+    global DEBUG
+    DEBUG = debug
+
     if ui is True:
         ole_app = QApplication(sys.argv)
         ole_window = OLEWindow(debug)
         ole_window.show()
 
     else:
-        convert_file(extract_dir, save_dir)
+        convert_file(extract_dir, save_dir, debug, ui)
         input("Press [ENTER] to continue...")
 

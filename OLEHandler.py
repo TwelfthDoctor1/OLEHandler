@@ -26,7 +26,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "-d", "--debug",
-    help="Start the script in DEBUG mode.",
+    help="Whether to start the script in DEBUG mode.",
     dest="debug",
     type=bool,
     default=False
