@@ -3,6 +3,7 @@ import os
 import shutil
 from zipfile import ZipFile
 from OLELib.OLEErrorUI import OLEErrorWindow
+from OLELib.OLEExtInputDialog import OLEExtInputWindow, parse_attachment
 from OLELib.OLEInfoUI import OLEInfoWindow
 from OLELib.FileByteInfo import BYTE_START_LIST, BYTE_END_LIST, CONVERSION_LIST
 
@@ -181,6 +182,24 @@ def extract_attachments(saved_path: Path or str, debug, ui=False):
                         break
 
                 if EXTRACTED is False:
+                    if ui is True:
+                        ole_input = OLEExtInputWindow(
+                            ui=ui,
+                            debug=debug,
+                            directory=saved_path,
+                            file=init_sn,
+                            data=f_binarr_data
+                        )
+                        ole_input.show()
+                    else:
+                        user_ext = input("OLEHandler failed to determine filetype, please input assumed filetype: ")
+
+                        parse_attachment(ui, debug, saved_path, init_sn, user_ext, f_binarr_data)
+
+                    EXTRACTED = True
+                    PASSED_COUNT += 1
+
+                if EXTRACTED is False:
                     if debug is True:
                         print(f"Failed to convert Attachment {i + 1}. Skipping...")
 
@@ -218,3 +237,12 @@ def extract_attachments(saved_path: Path or str, debug, ui=False):
             text=f"Total Count: {ATTACHMENT_COUNT}\nPassed: {PASSED_COUNT}\nFailed: {FAILED_COUNT}"
         )
         ole_info.show()
+
+    for (x, y, z) in os.walk(TEMP_DIR):
+        if x == TEMP_DIR:
+            for i in y:
+                if os.path.exists(i):
+                    os.remove(os.path.join(TEMP_DIR, i))
+            for i in z:
+                if os.path.exists(i):
+                    os.remove(os.path.join(TEMP_DIR, i))

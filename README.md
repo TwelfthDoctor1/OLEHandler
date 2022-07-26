@@ -1,3 +1,5 @@
+![OLEHandler Banner](https://github.com/TwelfthDoctor1/OLEHandler/blob/master/GitResources/OLEHandlerBanner.png)
+
 # OLEHandler
 
 Extract Core Office Files (i.e. PPTX, DOCX, XLSX) and/or Convert oleObject.bin files into PDFs.
